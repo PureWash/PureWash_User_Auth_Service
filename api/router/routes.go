@@ -38,16 +38,16 @@ func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// User routerlarini sozlash
-	router.POST("/register")
-	router.POST("/login")
+	router.POST("/register", c.mainHandler.User().RegisterUserHandler)
+	router.POST("/login", c.mainHandler.User().LoginUserHandler)
 
 	// user guruhlash
 	user := router.Group("/users")
 	{
-		user.GET("/profile")
-		user.PUT("/update")
-		user.DELETE("/delete")
-		user.PUT("/password")
+		user.GET("/profile", c.mainHandler.User().GetUserHandler)
+		user.PUT("/update", c.mainHandler.User().UpdateUserHandler)
+		user.DELETE("/delete", c.mainHandler.User().DeleteUserHandler)
+		user.PUT("/password", c.mainHandler.User().UpdatePassword)
 	}
 
 }

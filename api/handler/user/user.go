@@ -39,7 +39,7 @@ func NewUserHandler(userService service.UserService, logger *slog.Logger) UserHa
 // @Success 201 {object} models.UserRegisterResponce
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /users/register [post]
+// @Router /register [post]
 func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 	uh.logger.Info(fmt.Sprint("User register methods"))
 	var user models.UserRegisterRequst
@@ -83,7 +83,7 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 // @Success 200 {object} models.LoginResponse
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /users/login [post]
+// @Router /login [post]
 func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 	uh.logger.Info("User login methods")
 	var login models.LoginRequest

@@ -13,7 +13,6 @@ type ErrorResponse struct {
 }
 
 type UserRegisterRequst struct {
-	ID          string `json:"id"`
 	Username    string `json:"username"`
 	FullName    string `json:"full_name"`
 	PhoneNumber string `json:"phone_number"`

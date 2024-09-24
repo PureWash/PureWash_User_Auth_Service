@@ -39,7 +39,7 @@ func (us *userServiceImpl) RegisterUser(ctx context.Context, user models.UserReg
 		return nil, err
 	}
 	uid, err := us.userRepository.CreateUser(ctx, storage.CreateUserParams{
-		ID:           uuid.MustParse(user.ID),
+		ID:           uuid.New(),
 		Username:     user.Username,
 		FullName:     user.FullName,
 		PhoneNumber:  user.PhoneNumber,
