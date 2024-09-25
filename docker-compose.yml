@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16.3
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - db-data:/var/lib/postgresql/data  
+    ports:
+      - 5454:5432
+    networks:
+      - custom_network  
+
+  migrate:
+    image: migrate/migrate
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable",
+      "up"
+    ]
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./database/migrations:/migrations  
+    networks:
+      - custom_network
+
+  user_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: user_service
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - 8081:8179
+    networks:
+      - custom_network
+
+networks:
+  custom_network:  
+    external: true  
+
+volumes:
+  db-data:
