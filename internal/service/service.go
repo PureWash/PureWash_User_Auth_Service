@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
+	"user-service/internal/config"
 	"user-service/internal/models"
 	"user-service/internal/security"
 	"user-service/storage"
@@ -23,6 +25,7 @@ type UserService interface {
 type userServiceImpl struct {
 	userRepository *storage.Queries
 	logger         *slog.Logger
+	cfg            config.Config
 }
 
 func NewUserService(queries *storage.Queries, logger *slog.Logger) UserService {
@@ -65,17 +68,27 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 		return nil, fmt.Errorf("password is incorrect")
 	}
 
-	token, err := security.GenerateJWTToken(security.TokenClaims{
+	accessToken, err := security.GenerateJWTToken(security.TokenClaims{
 		ID:       loginUser.ID.String(),
 		Username: loginUser.Username,
 		Role:     loginUser.Role.String,
-	})
+	}, us.cfg.SECRET_KEY, time.Duration(time.Minute*20))
 	if err != nil {
 		us.logger.Error(fmt.Sprintf("Error in generate access token: %s", err.Error()))
 	}
 
+	refreshToken, err := security.GenerateJWTToken(security.TokenClaims{
+		ID:       loginUser.ID.String(),
+		Username: loginUser.Username,
+		Role:     loginUser.Role.String,
+	}, us.cfg.SECRET_KEY, time.Duration(7*24*time.Hour))
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in generate refresh token: %s", err.Error()))
+	}
+
 	return &models.LoginResponse{
-		AccessToken: token,
+		AccessToken: accessToken,
+		RefreshToken: refreshToken,
 	}, nil
 }
 

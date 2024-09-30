@@ -3,7 +3,6 @@ package security
 import (
 	"fmt"
 	"time"
-	"user-service/internal/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -15,23 +14,23 @@ type TokenClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWTToken(claim TokenClaims) (string, error) {
+func GenerateJWTToken(claim TokenClaims, secretKey string, exp time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, TokenClaims{
 		ID:       claim.ID,
 		Username: claim.Username,
 		Role:     claim.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(20 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(exp)),
 		},
 	})
 
-	return token.SignedString([]byte(config.Load().SECRET_KEY))
+	return token.SignedString([]byte(secretKey))
 }
 
-func ExtractClaims(tokenString string) (*TokenClaims, error) {
+func ExtractClaims(tokenString string, secretKey string) (*TokenClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(t *jwt.Token) (interface{}, error) {
-		return []byte(config.Load().SECRET_KEY), nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
