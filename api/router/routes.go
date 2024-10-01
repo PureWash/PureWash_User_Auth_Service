@@ -2,6 +2,7 @@ package router
 
 import (
 	"user-service/api/handler"
+	"user-service/api/middleware"
 
 	_ "user-service/api/docs"
 
@@ -54,4 +55,5 @@ func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
 
 func (c *controllerImpl) SetupMiddleware(router *gin.Engine) {
 	router.Use(gin.Logger())
+	router.Use(middleware.CorsMiddileware())
 }
