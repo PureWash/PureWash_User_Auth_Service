@@ -1,1 +1,9 @@
 {"time":"2024-09-24T20:13:34.815313778+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-01T16:21:55.854304673+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-01T16:21:55.870430265+05:00","level":"ERROR","msg":"Error in login user: pq: column \"deleted_at\" does not exist"}
+{"time":"2024-10-01T16:21:55.870485527+05:00","level":"ERROR","msg":"Error in server login user: pq: column \"deleted_at\" does not exist"}
+{"time":"2024-10-01T16:22:50.117097802+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-01T16:22:50.118838402+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-01T16:22:50.11886981+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-01T16:22:59.699705918+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-01T16:23:11.199590489+05:00","level":"INFO","msg":"User login methods"}

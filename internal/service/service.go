@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"log/slog"
 	"time"
 	"user-service/internal/config"
@@ -86,6 +87,8 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 	if err != nil {
 		us.logger.Error(fmt.Sprintf("Error in generate refresh token: %s", err.Error()))
 	}
+
+	log.Println(us.cfg.SECRET_KEY)
 
 	return &models.LoginResponse{
 		AccessToken: accessToken,

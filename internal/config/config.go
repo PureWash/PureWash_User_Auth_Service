@@ -34,7 +34,7 @@ func Load() Config {
 	cfg.DB_NAME = cast.ToString(coalesce("DB_NAME", "postgres"))
 	cfg.DB_PASSWORD = cast.ToString(coalesce("DB_PASSWORD", "password"))
 
-	cfg.SECRET_KEY = cast.ToString(coalesce("SECRET_KEY", "my-secret-key"))
+	cfg.SECRET_KEY = cast.ToString(coalesce("SECRET_KEY", "my_secret_key"))
 
 	return cfg
 }
