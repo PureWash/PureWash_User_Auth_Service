@@ -32,6 +32,7 @@ func NewUserService(queries *storage.Queries, logger *slog.Logger) UserService {
 	return &userServiceImpl{
 		userRepository: queries,
 		logger:         logger,
+		cfg: config.Load(),
 	}
 }
 
