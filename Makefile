@@ -1,5 +1,5 @@
 include .env
-export $(shell sed 's/=.*//', .env)
+export $(shell sed 's/=.*//' .env)
 
 CURRENT_DIR := $(shell pwd)
 DB_URL := postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable
@@ -23,7 +23,10 @@ mig-force:
 	$(MIGRATE_CMD) force 1
 
 mig-create:
-	migrate create -ext sql -dir $(MIGRATE_PATH) -seq carpet_wash_user_table
+	migrate create -ext sql -dir $(MIGRATE_PATH) -seq create_users_tables
+
+mig-schema:
+	migrate create -ext sql -dir $(MIGRATE_PATH) -seq create_carpetwash_tabples
 
 # Swaggerni generate qilish
 swag-init:

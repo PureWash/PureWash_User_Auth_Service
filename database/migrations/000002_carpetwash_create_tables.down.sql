@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS orders;
+
+DROP TABLE IF EXISTS addresses;
+
+DROP TABLE IF EXISTS services;
+
+DROP TABLE IF EXISTS company;
