@@ -80,7 +80,7 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 	check := security.CheckPasswordHash(login.Password, loginUser.PasswordHash)
 	if !check {
 		us.logger.Error(fmt.Sprintf("Passwrod is incorrect"))
-		return nil, fmt.Errorf("password is incorrect")
+		return nil, fmt.Errorf("username or password is incorrect")
 	}
 
 	accessToken, err := security.GenerateJWTToken(security.TokenClaims{
