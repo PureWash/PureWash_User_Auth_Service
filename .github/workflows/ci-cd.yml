@@ -27,7 +27,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ubuntu/CarpetsWash/PureWash_User_Auth_Service/
+            cd ubuntu/CarpetsWash/user-service/
             git pull origin main
             sudo docker compose down
             sudo docker image rm purewash_user_auth_service-user_service
@@ -39,7 +39,7 @@ jobs:
             sudo docker image rm purewash_api-gateway-api_service
             sudo docker compose up --build -d
 
-            cd ../CarpetWash/
+            cd ../carpet-wash/
             git pull origin main
             sudo docker compose down
             sudo docker image rm carpetwash-carpetwash
