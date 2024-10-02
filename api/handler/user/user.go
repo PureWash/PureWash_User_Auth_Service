@@ -3,7 +3,9 @@ package userHandler
 import (
 	"fmt"
 	"log/slog"
+	"net/http"
 	"user-service/internal/models"
+	"user-service/internal/pkg"
 	"user-service/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -57,9 +59,20 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 		return
 	}
 
+	phone, err := pkg.FormatPhoneNumber(user.PhoneNumber)
+	if err != nil {
+		uh.logger.Error(fmt.Sprintf("%v", err))
+		ctx.JSON(http.StatusBadRequest, models.ErrorResponse{
+			Status: http.StatusBadRequest,
+			Message: "Telefon raqam xato",
+			Error: err.Error(),
+		})
+		return
+	}
+
 	check, err := uh.userService.CheckIfUserExist(ctx, models.CheckUser{
 		Username:    user.Username,
-		PhoneNumber: user.PhoneNumber,
+		PhoneNumber: phone,
 	})
 
 	if err != nil {
