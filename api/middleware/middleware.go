@@ -1,23 +1,25 @@
 package middleware
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
-	"github.com/go-chi/cors"
 )
 
 func CorsMiddileware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// Basic CORS
-		// for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
-		cors.Handler(cors.Options{
-			// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-			AllowedOrigins: []string{"https://*", "http://*"},
-			// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-			ExposedHeaders:   []string{"Link"},
-			AllowCredentials: false,
-			MaxAge:           300, // Maximum value not ignored by any of major browsers
-		})
+		log.Println("Cors middleware triggered")
+		ctx.Writer.Header().Set("Content-Type", "application/json")
+		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		ctx.Writer.Header().Set("Access-Control-Max-Age", "86400")
+		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
+		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, X-Max")
+		ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if ctx.Request.Method == "OPTIONS" {
+			ctx.AbortWithStatus(200)
+		} else {
+			ctx.Next()
+		}
 	}
 }
