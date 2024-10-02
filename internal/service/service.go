@@ -16,6 +16,7 @@ import (
 
 type UserService interface {
 	RegisterUser(context.Context, models.UserRegisterRequst) (*models.UserRegisterResponce, error)
+	CheckIfUserExist(ctx context.Context, checkUser models.CheckUser) (bool, error)
 	LoginUser(context.Context, models.LoginRequest) (*models.LoginResponse, error)
 	GetUserProfile(context.Context, string) (*models.UserProfile, error)
 	UpdateUserProfile(context.Context, models.UpdateUserProfile) error
@@ -33,7 +34,7 @@ func NewUserService(queries *storage.Queries, logger *slog.Logger) UserService {
 	return &userServiceImpl{
 		userRepository: queries,
 		logger:         logger,
-		cfg: config.Load(),
+		cfg:            config.Load(),
 	}
 }
 
@@ -55,6 +56,19 @@ func (us *userServiceImpl) RegisterUser(ctx context.Context, user models.UserReg
 		Id:      uid.String(),
 		Message: "User registered successfully",
 	}, nil
+}
+
+func (us *userServiceImpl) CheckIfUserExist(ctx context.Context, checkUser models.CheckUser) (bool, error) {
+	count, err := us.userRepository.CheckIfUserExists(ctx, storage.CheckIfUserExistsParams{
+		Username:    checkUser.Username,
+		PhoneNumber: checkUser.PhoneNumber,
+	})
+
+	if err != nil {
+		us.logger.Error("User that ckecked error")
+		return false, err
+	}
+	return count > 0, nil
 }
 
 func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequest) (*models.LoginResponse, error) {
@@ -88,10 +102,8 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 		us.logger.Error(fmt.Sprintf("Error in generate refresh token: %s", err.Error()))
 	}
 
-	log.Println(us.cfg.SECRET_KEY)
-
 	return &models.LoginResponse{
-		AccessToken: accessToken,
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
 }

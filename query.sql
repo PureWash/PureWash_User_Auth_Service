@@ -17,6 +17,12 @@ SELECT
 FROM users
 WHERE username = $1 AND deleted_at IS NULL;
 
+-- name: CheckIfUserExists :one
+SELECT
+    COUNT(*)
+FROM users
+WHERE username = $1 OR phone_number = $2 AND deleted_at IS NULL;
+
 -- name: GetUser :one
 SELECT
     id,

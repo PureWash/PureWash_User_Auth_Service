@@ -7,3 +7,14 @@
 {"time":"2024-10-01T16:22:50.11886981+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
 {"time":"2024-10-01T16:22:59.699705918+05:00","level":"INFO","msg":"User register methods"}
 {"time":"2024-10-01T16:23:11.199590489+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-02T14:58:01.184652094+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T14:58:42.743999821+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-02T14:58:42.745343955+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-02T14:58:42.745452804+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-02T14:58:56.915184314+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T15:00:27.870874495+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T15:01:03.744214065+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T15:01:10.453949016+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T15:01:59.774791791+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-02T15:02:16.164284141+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-02T15:02:53.338326771+05:00","level":"INFO","msg":"User login methods"}

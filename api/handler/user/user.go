@@ -26,9 +26,9 @@ type userHandlerImpl struct {
 func NewUserHandler(userService service.UserService, logger *slog.Logger) UserHandler {
 	return &userHandlerImpl{
 		userService: userService,
-		logger: logger,
+		logger:      logger,
 	}
-} 
+}
 
 // @Summary Register a new user
 // @Description This endpoint registers a new user with provided details
@@ -47,7 +47,7 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 	// JSON binding error
 	if err := ctx.BindJSON(&user); err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in user binding json: %v", err))
-		
+
 		// Return detailed error response
 		ctx.JSON(400, models.ErrorResponse{
 			Status:  400,
@@ -57,11 +57,34 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 		return
 	}
 
+	check, err := uh.userService.CheckIfUserExist(ctx, models.CheckUser{
+		Username:    user.Username,
+		PhoneNumber: user.PhoneNumber,
+	})
+
+	if err != nil {
+		uh.logger.Error(fmt.Sprintf("User that checked error: %v", err))
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  500,
+			Message: "Failed to create user",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	if check {
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  500,
+			Message: "User already registered",
+		})
+		return
+	}
+
 	// Service layer error (user creation failed)
 	resp, err := uh.userService.RegisterUser(ctx, user)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error creating user: %v", err))
-		
+
 		ctx.JSON(500, models.ErrorResponse{
 			Status:  500,
 			Message: "Failed to create user",
@@ -72,7 +95,6 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 
 	ctx.JSON(201, resp)
 }
-
 
 // @Summary User login
 // @Description This endpoint allows a user to log in by providing login credentials
@@ -91,7 +113,7 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 	// JSON binding error
 	if err := ctx.BindJSON(&login); err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in binding json: %v", err))
-		
+
 		ctx.JSON(400, models.ErrorResponse{
 			Status:  400,
 			Message: "Invalid login input",
@@ -104,7 +126,7 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 	resp, err := uh.userService.LoginUser(ctx, login)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in server login user: %v", err))
-		
+
 		ctx.JSON(500, models.ErrorResponse{
 			Status:  500,
 			Message: "Failed to login",
@@ -115,7 +137,6 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 
 	ctx.JSON(200, resp)
 }
-
 
 // @Summary Delete a user
 // @Description This endpoint deletes a user by their ID
@@ -134,7 +155,7 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 	err := uh.userService.DeleteUser(ctx, id)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in delete user: %v", err))
-		
+
 		ctx.JSON(500, models.ErrorResponse{
 			Status:  500,
 			Message: "Failed to delete user",
@@ -148,7 +169,6 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 		Message: "User deleted successfully",
 	})
 }
-
 
 // @Summary Update user profile
 // @Description This endpoint updates user profile details
@@ -220,7 +240,6 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 
 	ctx.JSON(200, resp)
 }
-
 
 // @Summary Update password
 // @Description This endpoint updates the user's password

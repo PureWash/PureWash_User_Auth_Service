@@ -6,10 +6,15 @@ type SuccessResponce struct {
 }
 
 type ErrorResponse struct {
-	Status  int               `json:"status"`  // HTTP status code
-	Message string            `json:"message"` // A brief message explaining the error
-	Error   string            `json:"error,omitempty"`   // Detailed error message (optional)
-	Fields  map[string]string `json:"fields,omitempty"`  // Field-specific errors (optional)
+	Status  int               `json:"status"`           // HTTP status code
+	Message string            `json:"message"`          // A brief message explaining the error
+	Error   string            `json:"error,omitempty"`  // Detailed error message (optional)
+	Fields  map[string]string `json:"fields,omitempty"` // Field-specific errors (optional)
+}
+
+type CheckUser struct {
+	Username    string `json:"username"`
+	PhoneNumber string `json:"phone_number"`
 }
 
 type UserRegisterRequst struct {

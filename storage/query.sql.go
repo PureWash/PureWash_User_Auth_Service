@@ -12,6 +12,25 @@ import (
 	"github.com/google/uuid"
 )
 
+const checkIfUserExists = `-- name: CheckIfUserExists :one
+SELECT
+    COUNT(*)
+FROM users
+WHERE username = $1 OR phone_number = $2 AND deleted_at IS NULL
+`
+
+type CheckIfUserExistsParams struct {
+	Username    string
+	PhoneNumber string
+}
+
+func (q *Queries) CheckIfUserExists(ctx context.Context, arg CheckIfUserExistsParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, checkIfUserExists, arg.Username, arg.PhoneNumber)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
     id, 
