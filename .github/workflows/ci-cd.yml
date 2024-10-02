@@ -31,17 +31,17 @@ jobs:
             git pull origin main
             sudo docker compose down
             sudo docker image rm purewash_user_auth_service-user_service
-            sudo docker compose up -d
+            sudo docker compose up --build -d
 
             cd ../PureWash_Api-Gateway/
             git pull origin main
             sudo docker compose down
             sudo docker image rm purewash_api-gateway-api_service
-            sudo docker compose up -d
+            sudo docker compose up --build -d
 
             cd ../CarpetWash/
             git pull origin main
             sudo docker compose down
             sudo docker image rm carpetwash-carpetwash
-            sudo docker compose up -d
+            sudo docker compose up --build -d
 

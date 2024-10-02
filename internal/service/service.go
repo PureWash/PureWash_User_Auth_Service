@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 	"time"
 	"user-service/internal/config"
