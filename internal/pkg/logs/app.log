@@ -36,3 +36,13 @@
 {"time":"2024-10-03T17:00:57.222866177+05:00","level":"INFO","msg":"User profile get method"}
 {"time":"2024-10-03T17:06:54.383931757+05:00","level":"INFO","msg":"User profile get method"}
 {"time":"2024-10-03T17:08:23.472270407+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T17:10:06.90115445+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-03T17:10:06.901302351+05:00","level":"ERROR","msg":"telefon raqami noto'g'ri uzunlikda"}
+{"time":"2024-10-03T17:10:26.864164409+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-03T17:10:26.864373668+05:00","level":"ERROR","msg":"telefon raqami noto'g'ri uzunlikda"}
+{"time":"2024-10-03T17:10:46.078853416+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-03T17:10:59.882957561+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-03T17:11:30.106755387+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-03T17:11:39.790619412+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T17:11:50.043423919+05:00","level":"INFO","msg":"Update password method"}
+{"time":"2024-10-03T17:11:57.089306157+05:00","level":"INFO","msg":"User delete methods"}
