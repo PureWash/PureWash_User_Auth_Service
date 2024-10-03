@@ -41,7 +41,7 @@ SET
     full_name = $2,
     phone_number = $3,
     updated_at = now()
-WHERE password_hash = $4 AND deleted_at IS NULL;
+WHERE id = $4 AND password_hash = $5 AND deleted_at IS NULL;
 
 -- name: DeleteUser :exec
 UPDATE users
@@ -53,6 +53,6 @@ WHERE id = $1 AND deleted_at IS NULL;
 UPDATE users
 SET 
     password_hash = $1
-WHERE password_hash = $2 AND deleted_at IS NULL;
+WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL;
 
 

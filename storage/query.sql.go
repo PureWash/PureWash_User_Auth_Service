@@ -141,16 +141,17 @@ const updatePassword = `-- name: UpdatePassword :exec
 UPDATE users
 SET 
     password_hash = $1
-WHERE password_hash = $2 AND deleted_at IS NULL
+WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL
 `
 
 type UpdatePasswordParams struct {
 	PasswordHash   string
+	ID             uuid.UUID
 	PasswordHash_2 string
 }
 
 func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updatePassword, arg.PasswordHash, arg.PasswordHash_2)
+	_, err := q.db.ExecContext(ctx, updatePassword, arg.PasswordHash, arg.ID, arg.PasswordHash_2)
 	return err
 }
 
@@ -161,13 +162,14 @@ SET
     full_name = $2,
     phone_number = $3,
     updated_at = now()
-WHERE password_hash = $4 AND deleted_at IS NULL
+WHERE id = $4 AND password_hash = $5 AND deleted_at IS NULL
 `
 
 type UpdateUserParams struct {
 	Username     string
 	FullName     string
 	PhoneNumber  string
+	ID           uuid.UUID
 	PasswordHash string
 }
 
@@ -176,6 +178,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 		arg.Username,
 		arg.FullName,
 		arg.PhoneNumber,
+		arg.ID,
 		arg.PasswordHash,
 	)
 	return err

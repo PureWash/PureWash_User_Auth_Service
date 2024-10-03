@@ -58,3 +58,17 @@ type UpdatePasswordRequest struct {
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
 }
+
+type UpdateUserParams struct {
+	ID           string `json:"id"`
+	Username     string `json:"username"`
+	FullName     string `json:"full_name"`
+	PhoneNumber  string `json:"phone_number"`
+	PasswordHash string `json:"password_hash"`
+}
+
+type UpdatePasswordParams struct {
+	ID          string `json:"id"`
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}

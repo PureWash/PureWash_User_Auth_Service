@@ -2,6 +2,7 @@ package security
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -29,6 +30,7 @@ func GenerateJWTToken(claim TokenClaims, secretKey string, exp time.Duration) (s
 }
 
 func ExtractClaims(tokenString string, secretKey string) (*TokenClaims, error) {
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
@@ -44,6 +46,16 @@ func ExtractClaims(tokenString string, secretKey string) (*TokenClaims, error) {
 	claims, ok := token.Claims.(*TokenClaims)
 	if !ok {
 		return nil, err
+	}
+
+	return claims, nil
+}
+
+func TokenClaimsParse(val any) (*TokenClaims, error) {
+	claims, ok := val.(*TokenClaims)
+
+	if !ok {
+		return nil, fmt.Errorf("cannot parse token claims")
 	}
 
 	return claims, nil

@@ -155,12 +155,6 @@ paths:
   /users/delete:
     delete:
       description: This endpoint deletes a user by their ID
-      parameters:
-      - description: User ID
-        in: query
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -176,6 +170,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Delete a user
       tags:
       - users
@@ -206,18 +202,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Update password
       tags:
       - users
   /users/profile:
     get:
       description: This endpoint retrieves the user profile by their ID
-      parameters:
-      - description: User ID
-        in: query
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -233,6 +225,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Get user profile
       tags:
       - users
@@ -263,6 +257,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
       summary: Update user profile
       tags:
       - users

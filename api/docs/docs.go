@@ -109,6 +109,11 @@ const docTemplate = `{
         },
         "/users/delete": {
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This endpoint deletes a user by their ID",
                 "produces": [
                     "application/json"
@@ -117,15 +122,6 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Delete a user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -150,6 +146,11 @@ const docTemplate = `{
         },
         "/users/password": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This endpoint updates the user's password",
                 "consumes": [
                     "application/json"
@@ -196,6 +197,11 @@ const docTemplate = `{
         },
         "/users/profile": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This endpoint retrieves the user profile by their ID",
                 "produces": [
                     "application/json"
@@ -204,15 +210,6 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Get user profile",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -237,6 +234,11 @@ const docTemplate = `{
         },
         "/users/update": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "This endpoint updates user profile details",
                 "consumes": [
                     "application/json"

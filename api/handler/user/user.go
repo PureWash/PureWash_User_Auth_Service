@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"user-service/internal/models"
 	"user-service/internal/pkg"
+	"user-service/internal/security"
 	"user-service/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -63,9 +64,9 @@ func (uh *userHandlerImpl) RegisterUserHandler(ctx *gin.Context) {
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("%v", err))
 		ctx.JSON(http.StatusBadRequest, models.ErrorResponse{
-			Status: http.StatusBadRequest,
+			Status:  http.StatusBadRequest,
 			Message: "Telefon raqam xato",
-			Error: err.Error(),
+			Error:   err.Error(),
 		})
 		return
 	}
@@ -155,17 +156,34 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 // @Description This endpoint deletes a user by their ID
 // @Tags users
 // @Produce json
-// @Param id query string true "User ID"
+// @Security     ApiKeyAuth
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/delete [delete]
 func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 	uh.logger.Info("User delete methods")
-	var id = ctx.Query("id")
+	var val, exists = ctx.Get("claims")
+	if !exists {
+		ctx.JSON(401, models.ErrorResponse{
+			Status:  401,
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	tokenClaims, err := security.TokenClaimsParse(val)
+	if err != nil {
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  401,
+			Message: "Token is invalid",
+			Error:   err.Error(),
+		})
+		return
+	}
 
 	// Service layer error (delete user failed)
-	err := uh.userService.DeleteUser(ctx, id)
+	err = uh.userService.DeleteUser(ctx, tokenClaims.ID)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in delete user: %v", err))
 
@@ -188,6 +206,7 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security     ApiKeyAuth
 // @Param user body models.UpdateUserProfile true "User Profile"
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
@@ -195,6 +214,26 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 // @Router /users/update [put]
 func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 	uh.logger.Info("User update method")
+
+	var val, exists = ctx.Get("claims")
+	if !exists {
+		ctx.JSON(401, models.ErrorResponse{
+			Status:  401,
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	tokenClaims, err := security.TokenClaimsParse(val)
+	if err != nil {
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  401,
+			Message: "Token is invalid",
+			Error:   err.Error(),
+		})
+		return
+	}
+
 	var user models.UpdateUserProfile
 
 	// JSON binding error
@@ -209,7 +248,13 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 	}
 
 	// Service layer error
-	err := uh.userService.UpdateUserProfile(ctx, user)
+	err = uh.userService.UpdateUserProfile(ctx, models.UpdateUserParams{
+		ID:           tokenClaims.ID,
+		Username:     user.Username,
+		FullName:     user.FullName,
+		PhoneNumber:  user.PhoneNumber,
+		PasswordHash: user.PasswordHash,
+	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating user profile: %v", err))
 		ctx.JSON(500, models.ErrorResponse{
@@ -230,17 +275,34 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 // @Description This endpoint retrieves the user profile by their ID
 // @Tags users
 // @Produce json
-// @Param id query string true "User ID"
+// @Security     ApiKeyAuth
 // @Success 200 {object} models.UserProfile
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/profile [get]
 func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 	uh.logger.Info("User profile get method")
-	id := ctx.Query("id")
+	var val, exists = ctx.Get("claims")
+	if !exists {
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  401,
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	tokenClaims, err := security.TokenClaimsParse(val)
+	if err != nil {
+		ctx.JSON(401, models.ErrorResponse{
+			Status:  401,
+			Message: "Token is invalid",
+			Error:   err.Error(),
+		})
+		return
+	}
 
 	// Service layer error
-	resp, err := uh.userService.GetUserProfile(ctx, id)
+	resp, err := uh.userService.GetUserProfile(ctx, tokenClaims.ID)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error retrieving user profile: %v", err))
 		ctx.JSON(500, models.ErrorResponse{
@@ -259,6 +321,7 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 // @Tags users
 // @Accept json
 // @Produce json
+// @Security     ApiKeyAuth
 // @Param updatePass body models.UpdatePasswordRequest true "Update Password Request"
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
@@ -266,6 +329,25 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 // @Router /users/password [put]
 func (uh *userHandlerImpl) UpdatePassword(ctx *gin.Context) {
 	uh.logger.Info("Update password method")
+	var val, exists = ctx.Get("claims")
+	if !exists {
+		ctx.JSON(401, models.ErrorResponse{
+			Status:  401,
+			Message: "Authorization header is required",
+		})
+		return
+	}
+
+	tokenClaims, err := security.TokenClaimsParse(val)
+	if err != nil {
+		ctx.JSON(500, models.ErrorResponse{
+			Status:  401,
+			Message: "Token is invalid",
+			Error:   err.Error(),
+		})
+		return
+	}
+
 	var updatePass models.UpdatePasswordRequest
 
 	// JSON binding error
@@ -280,7 +362,11 @@ func (uh *userHandlerImpl) UpdatePassword(ctx *gin.Context) {
 	}
 
 	// Service layer error
-	err := uh.userService.UpdatePassword(ctx, updatePass)
+	err = uh.userService.UpdatePassword(ctx, models.UpdatePasswordParams{
+		ID:          tokenClaims.ID,
+		OldPassword: updatePass.OldPassword,
+		NewPassword: updatePass.NewPassword,
+	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating password: %v", err))
 		ctx.JSON(500, models.ErrorResponse{

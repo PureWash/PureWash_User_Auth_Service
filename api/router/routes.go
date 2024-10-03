@@ -44,6 +44,7 @@ func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
 
 	// user guruhlash
 	user := router.Group("/users")
+	user.Use(middleware.IsAuthenticated())
 	{
 		user.GET("/profile", c.mainHandler.User().GetUserHandler)
 		user.PUT("/update", c.mainHandler.User().UpdateUserHandler)

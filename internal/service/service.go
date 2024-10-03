@@ -18,9 +18,9 @@ type UserService interface {
 	CheckIfUserExist(ctx context.Context, checkUser models.CheckUser) (bool, error)
 	LoginUser(context.Context, models.LoginRequest) (*models.LoginResponse, error)
 	GetUserProfile(context.Context, string) (*models.UserProfile, error)
-	UpdateUserProfile(context.Context, models.UpdateUserProfile) error
+	UpdateUserProfile(context.Context, models.UpdateUserParams) error
 	DeleteUser(context.Context, string) error
-	UpdatePassword(context.Context, models.UpdatePasswordRequest) error
+	UpdatePassword(context.Context, models.UpdatePasswordParams) error
 }
 
 type userServiceImpl struct {
@@ -128,8 +128,14 @@ func (us *userServiceImpl) GetUserProfile(ctx context.Context, id string) (*mode
 	}, nil
 }
 
-func (us *userServiceImpl) UpdateUserProfile(ctx context.Context, updateUser models.UpdateUserProfile) error {
-	err := us.userRepository.UpdateUser(ctx, storage.UpdateUserParams{
+func (us *userServiceImpl) UpdateUserProfile(ctx context.Context, updateUser models.UpdateUserParams) error {
+	uid, err := uuid.Parse(updateUser.ID)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in parse uuid: %s", err.Error()))
+		return err
+	}
+	err = us.userRepository.UpdateUser(ctx, storage.UpdateUserParams{
+		ID:           uid,
 		Username:     updateUser.Username,
 		FullName:     updateUser.FullName,
 		PhoneNumber:  updateUser.PhoneNumber,
@@ -160,8 +166,14 @@ func (us *userServiceImpl) DeleteUser(ctx context.Context, id string) error {
 	return nil
 }
 
-func (us *userServiceImpl) UpdatePassword(ctx context.Context, updatePass models.UpdatePasswordRequest) error {
-	err := us.userRepository.UpdatePassword(ctx, storage.UpdatePasswordParams{
+func (us *userServiceImpl) UpdatePassword(ctx context.Context, updatePass models.UpdatePasswordParams) error {
+	uid, err := uuid.Parse(updatePass.ID)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in parse uuid: %s", err.Error()))
+		return err
+	}
+	err = us.userRepository.UpdatePassword(ctx, storage.UpdatePasswordParams{
+		ID:             uid,
 		PasswordHash:   updatePass.OldPassword,
 		PasswordHash_2: updatePass.NewPassword,
 	})

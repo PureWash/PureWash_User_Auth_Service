@@ -27,3 +27,12 @@
 {"time":"2024-10-02T16:15:36.282499738+05:00","level":"INFO","msg":"User login methods"}
 {"time":"2024-10-02T16:16:30.312801147+05:00","level":"INFO","msg":"User profile get method"}
 {"time":"2024-10-02T16:57:57.74631064+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-03T16:52:27.565348711+05:00","level":"INFO","msg":"User delete methods"}
+{"time":"2024-10-03T16:52:43.410429187+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-03T16:52:53.13557805+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T16:55:24.424491127+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-03T16:55:57.650279635+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T17:00:26.545689282+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-03T17:00:57.222866177+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T17:06:54.383931757+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-03T17:08:23.472270407+05:00","level":"INFO","msg":"User profile get method"}
