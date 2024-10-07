@@ -7,7 +7,6 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -15,7 +14,7 @@ import (
 const checkIfUserExists = `-- name: CheckIfUserExists :one
 SELECT
     COUNT(*)
-FROM users
+FROM employees
 WHERE username = $1 OR phone_number = $2 AND deleted_at IS NULL
 `
 
@@ -31,14 +30,42 @@ func (q *Queries) CheckIfUserExists(ctx context.Context, arg CheckIfUserExistsPa
 	return count, err
 }
 
+const createClient = `-- name: CreateClient :exec
+INSERT INTO clients (
+    full_name,
+    phone_number,
+    latitude,
+    longitude
+) VALUES($1, $2, $3, $4)
+RETURNING (id, full_name)
+`
+
+type CreateClientParams struct {
+	FullName    string
+	PhoneNumber string
+	Latitude    float64
+	Longitude   float64
+}
+
+func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) error {
+	_, err := q.db.ExecContext(ctx, createClient,
+		arg.FullName,
+		arg.PhoneNumber,
+		arg.Latitude,
+		arg.Longitude,
+	)
+	return err
+}
+
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (
+INSERT INTO employees (
     id, 
     username,
     full_name,
     phone_number,
-    password_hash
-) VALUES ($1, $2, $3, $4, $5)
+    password_hash,
+    role 
+) VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id
 `
 
@@ -48,6 +75,7 @@ type CreateUserParams struct {
 	FullName     string
 	PhoneNumber  string
 	PasswordHash string
+	Role         string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (uuid.UUID, error) {
@@ -57,14 +85,28 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (uuid.UU
 		arg.FullName,
 		arg.PhoneNumber,
 		arg.PasswordHash,
+		arg.Role,
 	)
 	var id uuid.UUID
 	err := row.Scan(&id)
 	return id, err
 }
 
+const deleteClient = `-- name: DeleteClient :exec
+
+UPDATE clients
+SET
+    deleted_at = now()
+WHERE deleted_at IS NULL AND id = $1
+`
+
+func (q *Queries) DeleteClient(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteClient, id)
+	return err
+}
+
 const deleteUser = `-- name: DeleteUser :exec
-UPDATE users
+UPDATE employees
 SET 
     deleted_at = now()
 WHERE id = $1 AND deleted_at IS NULL
@@ -75,6 +117,38 @@ func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+const getClient = `-- name: GetClient :one
+SELECT
+    id,
+    full_name,
+    phone_number,
+    latitude,
+    longitude
+FROM clients
+WHERE  id = $1 AND deleted_at IS NULL
+`
+
+type GetClientRow struct {
+	ID          uuid.UUID
+	FullName    string
+	PhoneNumber string
+	Latitude    float64
+	Longitude   float64
+}
+
+func (q *Queries) GetClient(ctx context.Context, id uuid.UUID) (GetClientRow, error) {
+	row := q.db.QueryRowContext(ctx, getClient, id)
+	var i GetClientRow
+	err := row.Scan(
+		&i.ID,
+		&i.FullName,
+		&i.PhoneNumber,
+		&i.Latitude,
+		&i.Longitude,
+	)
+	return i, err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT
     id,
@@ -82,7 +156,7 @@ SELECT
     full_name,
     phone_number,
     role
-FROM users
+FROM employees
 WHERE
     id = $1 AND deleted_at IS NULL
 `
@@ -92,7 +166,7 @@ type GetUserRow struct {
 	Username    string
 	FullName    string
 	PhoneNumber string
-	Role        sql.NullString
+	Role        string
 }
 
 func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (GetUserRow, error) {
@@ -114,7 +188,7 @@ SELECT
     username,
     password_hash,
     role
-FROM users
+FROM employees
 WHERE username = $1 AND deleted_at IS NULL
 `
 
@@ -122,7 +196,7 @@ type LoginUserRow struct {
 	ID           uuid.UUID
 	Username     string
 	PasswordHash string
-	Role         sql.NullString
+	Role         string
 }
 
 func (q *Queries) LoginUser(ctx context.Context, username string) (LoginUserRow, error) {
@@ -137,8 +211,28 @@ func (q *Queries) LoginUser(ctx context.Context, username string) (LoginUserRow,
 	return i, err
 }
 
+const updateClient = `-- name: UpdateClient :exec
+UPDATE clients
+SET
+    latitude = $1,
+    longitude = $2
+WHERE
+    id = $3 AND deleted_at IS NULL
+`
+
+type UpdateClientParams struct {
+	Latitude  float64
+	Longitude float64
+	ID        uuid.UUID
+}
+
+func (q *Queries) UpdateClient(ctx context.Context, arg UpdateClientParams) error {
+	_, err := q.db.ExecContext(ctx, updateClient, arg.Latitude, arg.Longitude, arg.ID)
+	return err
+}
+
 const updatePassword = `-- name: UpdatePassword :exec
-UPDATE users
+UPDATE employees
 SET 
     password_hash = $1
 WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL
@@ -156,7 +250,7 @@ func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) 
 }
 
 const updateUser = `-- name: UpdateUser :exec
-UPDATE users
+UPDATE employees
 SET 
     username = $1,
     full_name = $2,

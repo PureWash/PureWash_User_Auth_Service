@@ -10,29 +10,41 @@ import (
 	"github.com/google/uuid"
 )
 
-type Address struct {
-	ID        uuid.UUID
-	UserID    uuid.NullUUID
-	Latitude  sql.NullString
-	Longitude sql.NullString
-	CreatedAt sql.NullTime
-	UpdatedAt sql.NullTime
-	DeletedAt sql.NullInt32
+type Client struct {
+	ID          uuid.UUID
+	FullName    string
+	PhoneNumber string
+	Latitude    float64
+	Longitude   float64
+	CreatedAt   sql.NullTime
+	UpdatedAt   sql.NullTime
+	DeletedAt   sql.NullTime
 }
 
 type Company struct {
 	ID          uuid.UUID
 	Name        string
 	Description sql.NullString
-	LogoUrl     sql.NullString
 	CreatedAt   sql.NullTime
 	UpdatedAt   sql.NullTime
 	DeletedAt   sql.NullInt32
 }
 
+type Employee struct {
+	ID           uuid.UUID
+	Username     string
+	FullName     string
+	PhoneNumber  string
+	Role         string
+	PasswordHash string
+	CreatedAt    sql.NullTime
+	UpdatedAt    sql.NullTime
+	DeletedAt    sql.NullTime
+}
+
 type Order struct {
 	ID         uuid.UUID
-	UserID     uuid.NullUUID
+	ClientID   uuid.UUID
 	ServiceID  uuid.NullUUID
 	Area       float64
 	TotalPrice sql.NullFloat64
@@ -48,16 +60,4 @@ type Service struct {
 	Name        string
 	Description sql.NullString
 	Price       sql.NullString
-}
-
-type User struct {
-	ID           uuid.UUID
-	Username     string
-	FullName     string
-	PhoneNumber  string
-	PasswordHash string
-	Role         sql.NullString
-	CreatedAt    sql.NullTime
-	UpdatedAt    sql.NullTime
-	DeletedAt    sql.NullTime
 }

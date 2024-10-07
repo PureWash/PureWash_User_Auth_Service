@@ -55,6 +55,5 @@ func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
 }
 
 func (c *controllerImpl) SetupMiddleware(router *gin.Engine) {
-	router.Use(gin.Logger())
 	router.Use(middleware.CorsMiddileware())
 }

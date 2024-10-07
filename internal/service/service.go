@@ -49,6 +49,7 @@ func (us *userServiceImpl) RegisterUser(ctx context.Context, user models.UserReg
 		FullName:     user.FullName,
 		PhoneNumber:  user.PhoneNumber,
 		PasswordHash: hashedPassword,
+		Role:         user.Role,
 	})
 
 	return &models.UserRegisterResponce{
@@ -86,7 +87,7 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 	accessToken, err := security.GenerateJWTToken(security.TokenClaims{
 		ID:       loginUser.ID.String(),
 		Username: loginUser.Username,
-		Role:     loginUser.Role.String,
+		Role:     loginUser.Role,
 	}, us.cfg.SECRET_KEY, time.Duration(time.Minute*20))
 	if err != nil {
 		us.logger.Error(fmt.Sprintf("Error in generate access token: %s", err.Error()))
@@ -95,7 +96,7 @@ func (us *userServiceImpl) LoginUser(ctx context.Context, login models.LoginRequ
 	refreshToken, err := security.GenerateJWTToken(security.TokenClaims{
 		ID:       loginUser.ID.String(),
 		Username: loginUser.Username,
-		Role:     loginUser.Role.String,
+		Role:     loginUser.Role,
 	}, us.cfg.SECRET_KEY, time.Duration(7*24*time.Hour))
 	if err != nil {
 		us.logger.Error(fmt.Sprintf("Error in generate refresh token: %s", err.Error()))
@@ -124,7 +125,7 @@ func (us *userServiceImpl) GetUserProfile(ctx context.Context, id string) (*mode
 		Username:    userProfile.Username,
 		FullName:    userProfile.FullName,
 		PhoneNumber: userProfile.PhoneNumber,
-		Role:        userProfile.Role.String,
+		Role:        userProfile.Role,
 	}, nil
 }
 

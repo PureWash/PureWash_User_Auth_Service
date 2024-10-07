@@ -402,6 +402,9 @@ const docTemplate = `{
                 "phone_number": {
                     "type": "string"
                 },
+                "role": {
+                    "type": "string"
+                },
                 "username": {
                     "type": "string"
                 }

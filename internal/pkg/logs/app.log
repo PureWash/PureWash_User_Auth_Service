@@ -46,3 +46,11 @@
 {"time":"2024-10-03T17:11:39.790619412+05:00","level":"INFO","msg":"User profile get method"}
 {"time":"2024-10-03T17:11:50.043423919+05:00","level":"INFO","msg":"Update password method"}
 {"time":"2024-10-03T17:11:57.089306157+05:00","level":"INFO","msg":"User delete methods"}
+{"time":"2024-10-07T16:41:33.477495087+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-07T16:41:53.195727974+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-07T16:42:37.960591412+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-07T17:09:12.705986208+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-07T17:09:20.322584642+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-07T17:28:18.122442325+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-07T17:30:29.155075365+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-07T17:33:29.055147075+05:00","level":"INFO","msg":"User login methods"}

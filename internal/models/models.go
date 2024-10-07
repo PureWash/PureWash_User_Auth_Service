@@ -22,6 +22,7 @@ type UserRegisterRequst struct {
 	FullName    string `json:"full_name"`
 	PhoneNumber string `json:"phone_number"`
 	Password    string `json:"password"`
+	Role        string `json:"role"`
 }
 
 type UserRegisterResponce struct {

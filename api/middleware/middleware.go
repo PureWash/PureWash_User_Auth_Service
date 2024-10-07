@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"user-service/internal/config"
 	"user-service/internal/security"
@@ -12,7 +11,6 @@ import (
 
 func CorsMiddileware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		log.Println("Cors middleware triggered")
 		ctx.Writer.Header().Set("Content-Type", "application/json")
 		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		ctx.Writer.Header().Set("Access-Control-Max-Age", "86400")
@@ -35,7 +33,7 @@ func IsAuthenticated() gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, fmt.Errorf("authorization header is required"))
 			return
 		}
-		
+
 		claims, err := security.ExtractClaims(auth, config.Load().SECRET_KEY)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, fmt.Errorf("invalid token claims: %s", err))
