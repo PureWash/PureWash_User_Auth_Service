@@ -34,9 +34,9 @@ func main() {
 	r := gin.Default()
 
 	mainHandler := handler.NewMainHandler(service.NewUserService(queries, logger), logger)
-	controller := router.NewController(mainHandler)
-	controller.SetupMiddleware(r)
-	controller.SetupRoutes(r)
+	controller := router.NewController(mainHandler, r)
+	controller.SetupMiddleware()
+	controller.SetupRoutes()
 
 	log.Fatal(r.Run(":8179"))
 }

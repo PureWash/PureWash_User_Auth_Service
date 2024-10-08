@@ -12,17 +12,19 @@ import (
 )
 
 type Controller interface {
-	SetupRoutes(router *gin.Engine)     // Asosiy yo'llarni o'rnatish
-	SetupMiddleware(router *gin.Engine) // Middlewarelarni sozlash
+	SetupRoutes()     // Asosiy yo'llarni o'rnatish
+	SetupMiddleware() // Middlewarelarni sozlash
 }
 
 type controllerImpl struct {
 	mainHandler handler.MainHandler
+	router      *gin.Engine
 }
 
-func NewController(mainHandler handler.MainHandler) Controller {
+func NewController(mainHandler handler.MainHandler, router *gin.Engine) Controller {
 	return &controllerImpl{
 		mainHandler: mainHandler,
+		router:      router,
 	}
 }
 
@@ -33,17 +35,17 @@ func NewController(mainHandler handler.MainHandler) Controller {
 // @in header
 // @name Authorization
 // @schemes http
-func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
+func (c *controllerImpl) SetupRoutes() {
 
 	// Swagger endpointini sozlash
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	c.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// User routerlarini sozlash
-	router.POST("/register", c.mainHandler.User().RegisterUserHandler)
-	router.POST("/login", c.mainHandler.User().LoginUserHandler)
+	c.router.POST("/register", c.mainHandler.User().RegisterUserHandler)
+	c.router.POST("/login", c.mainHandler.User().LoginUserHandler)
 
 	// user guruhlash
-	user := router.Group("/users")
+	user := c.router.Group("/users")
 	user.Use(middleware.IsAuthenticated())
 	{
 		user.GET("/profile", c.mainHandler.User().GetUserHandler)
@@ -54,6 +56,6 @@ func (c *controllerImpl) SetupRoutes(router *gin.Engine) {
 
 }
 
-func (c *controllerImpl) SetupMiddleware(router *gin.Engine) {
-	router.Use(middleware.CorsMiddileware())
+func (c *controllerImpl) SetupMiddleware() {
+	c.router.Use(middleware.CorsMiddileware())
 }
