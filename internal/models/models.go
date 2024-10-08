@@ -65,7 +65,7 @@ type UpdateUserParams struct {
 	Username     string `json:"username"`
 	FullName     string `json:"full_name"`
 	PhoneNumber  string `json:"phone_number"`
-	PasswordHash string `json:"password_hash"`
+	Password string `json:"password"`
 }
 
 type UpdatePasswordParams struct {

@@ -253,7 +253,7 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 		Username:     user.Username,
 		FullName:     user.FullName,
 		PhoneNumber:  user.PhoneNumber,
-		PasswordHash: user.PasswordHash,
+		Password: user.PasswordHash,
 	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating user profile: %v", err))

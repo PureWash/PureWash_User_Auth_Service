@@ -30,33 +30,6 @@ func (q *Queries) CheckIfUserExists(ctx context.Context, arg CheckIfUserExistsPa
 	return count, err
 }
 
-const createClient = `-- name: CreateClient :exec
-INSERT INTO clients (
-    full_name,
-    phone_number,
-    latitude,
-    longitude
-) VALUES($1, $2, $3, $4)
-RETURNING (id, full_name)
-`
-
-type CreateClientParams struct {
-	FullName    string
-	PhoneNumber string
-	Latitude    float64
-	Longitude   float64
-}
-
-func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) error {
-	_, err := q.db.ExecContext(ctx, createClient,
-		arg.FullName,
-		arg.PhoneNumber,
-		arg.Latitude,
-		arg.Longitude,
-	)
-	return err
-}
-
 const createUser = `-- name: CreateUser :one
 INSERT INTO employees (
     id, 
@@ -92,19 +65,6 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (uuid.UU
 	return id, err
 }
 
-const deleteClient = `-- name: DeleteClient :exec
-
-UPDATE clients
-SET
-    deleted_at = now()
-WHERE deleted_at IS NULL AND id = $1
-`
-
-func (q *Queries) DeleteClient(ctx context.Context, id uuid.UUID) error {
-	_, err := q.db.ExecContext(ctx, deleteClient, id)
-	return err
-}
-
 const deleteUser = `-- name: DeleteUser :exec
 UPDATE employees
 SET 
@@ -115,38 +75,6 @@ WHERE id = $1 AND deleted_at IS NULL
 func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
-}
-
-const getClient = `-- name: GetClient :one
-SELECT
-    id,
-    full_name,
-    phone_number,
-    latitude,
-    longitude
-FROM clients
-WHERE  id = $1 AND deleted_at IS NULL
-`
-
-type GetClientRow struct {
-	ID          uuid.UUID
-	FullName    string
-	PhoneNumber string
-	Latitude    float64
-	Longitude   float64
-}
-
-func (q *Queries) GetClient(ctx context.Context, id uuid.UUID) (GetClientRow, error) {
-	row := q.db.QueryRowContext(ctx, getClient, id)
-	var i GetClientRow
-	err := row.Scan(
-		&i.ID,
-		&i.FullName,
-		&i.PhoneNumber,
-		&i.Latitude,
-		&i.Longitude,
-	)
-	return i, err
 }
 
 const getUser = `-- name: GetUser :one
@@ -182,6 +110,20 @@ func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (GetUserRow, error)
 	return i, err
 }
 
+const getUserPassword = `-- name: GetUserPassword :one
+SELECT
+    password_hash
+FROM employees
+WHERE id = $1
+`
+
+func (q *Queries) GetUserPassword(ctx context.Context, id uuid.UUID) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUserPassword, id)
+	var password_hash string
+	err := row.Scan(&password_hash)
+	return password_hash, err
+}
+
 const loginUser = `-- name: LoginUser :one
 SELECT 
     id,
@@ -211,30 +153,11 @@ func (q *Queries) LoginUser(ctx context.Context, username string) (LoginUserRow,
 	return i, err
 }
 
-const updateClient = `-- name: UpdateClient :exec
-UPDATE clients
-SET
-    latitude = $1,
-    longitude = $2
-WHERE
-    id = $3 AND deleted_at IS NULL
-`
-
-type UpdateClientParams struct {
-	Latitude  float64
-	Longitude float64
-	ID        uuid.UUID
-}
-
-func (q *Queries) UpdateClient(ctx context.Context, arg UpdateClientParams) error {
-	_, err := q.db.ExecContext(ctx, updateClient, arg.Latitude, arg.Longitude, arg.ID)
-	return err
-}
-
 const updatePassword = `-- name: UpdatePassword :exec
 UPDATE employees
 SET 
-    password_hash = $1
+    password_hash = $1,
+    updated_at = now()
 WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL
 `
 
@@ -256,15 +179,14 @@ SET
     full_name = $2,
     phone_number = $3,
     updated_at = now()
-WHERE id = $4 AND password_hash = $5 AND deleted_at IS NULL
+WHERE id = $4 AND deleted_at IS NULL
 `
 
 type UpdateUserParams struct {
-	Username     string
-	FullName     string
-	PhoneNumber  string
-	ID           uuid.UUID
-	PasswordHash string
+	Username    string
+	FullName    string
+	PhoneNumber string
+	ID          uuid.UUID
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
@@ -273,7 +195,6 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 		arg.FullName,
 		arg.PhoneNumber,
 		arg.ID,
-		arg.PasswordHash,
 	)
 	return err
 }

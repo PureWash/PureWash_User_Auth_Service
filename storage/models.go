@@ -18,7 +18,7 @@ type Client struct {
 	Longitude   float64
 	CreatedAt   sql.NullTime
 	UpdatedAt   sql.NullTime
-	DeletedAt   sql.NullTime
+	DeletedAt   sql.NullInt32
 }
 
 type Company struct {
@@ -45,9 +45,9 @@ type Employee struct {
 type Order struct {
 	ID         uuid.UUID
 	ClientID   uuid.UUID
-	ServiceID  uuid.NullUUID
+	ServiceID  uuid.UUID
 	Area       float64
-	TotalPrice sql.NullFloat64
+	TotalPrice float64
 	Status     sql.NullString
 	CreatedAt  sql.NullTime
 	UpdatedAt  sql.NullTime

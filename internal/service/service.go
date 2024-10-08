@@ -135,12 +135,24 @@ func (us *userServiceImpl) UpdateUserProfile(ctx context.Context, updateUser mod
 		us.logger.Error(fmt.Sprintf("Error in parse uuid: %s", err.Error()))
 		return err
 	}
+
+	hashedPassword, err := us.userRepository.GetUserPassword(ctx, uid)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in check password %s", err.Error()))
+		return err
+	}
+
+	check := security.CheckPasswordHash(updateUser.Password, hashedPassword)
+	if !check {
+		us.logger.Error(fmt.Sprintf("Passwrod is incorrect"))
+		return fmt.Errorf("username or password is incorrect")
+	}
+
 	err = us.userRepository.UpdateUser(ctx, storage.UpdateUserParams{
-		ID:           uid,
-		Username:     updateUser.Username,
-		FullName:     updateUser.FullName,
-		PhoneNumber:  updateUser.PhoneNumber,
-		PasswordHash: updateUser.PasswordHash,
+		ID:          uid,
+		Username:    updateUser.Username,
+		FullName:    updateUser.FullName,
+		PhoneNumber: updateUser.PhoneNumber,
 	})
 
 	if err != nil {

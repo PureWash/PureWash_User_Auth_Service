@@ -42,7 +42,7 @@ SET
     full_name = $2,
     phone_number = $3,
     updated_at = now()
-WHERE id = $4 AND password_hash = $5 AND deleted_at IS NULL;
+WHERE id = $4 AND deleted_at IS NULL;
 
 -- name: DeleteUser :exec
 UPDATE employees
@@ -53,41 +53,12 @@ WHERE id = $1 AND deleted_at IS NULL;
 -- name: UpdatePassword :exec
 UPDATE employees
 SET 
-    password_hash = $1
+    password_hash = $1,
+    updated_at = now()
 WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL;
 
-
--- name: CreateClient :exec
-INSERT INTO clients (
-    full_name,
-    phone_number,
-    latitude,
-    longitude
-) VALUES($1, $2, $3, $4)
-RETURNING (id, full_name);
-
-
--- name: UpdateClient :exec
-UPDATE clients
-SET
-    latitude = $1,
-    longitude = $2
-WHERE
-    id = $3 AND deleted_at IS NULL;
-
--- name: GetClient :one
+-- name: GetUserPassword :one
 SELECT
-    id,
-    full_name,
-    phone_number,
-    latitude,
-    longitude
-FROM clients
-WHERE  id = $1 AND deleted_at IS NULL;
-
--- name: DeleteClient :exec
-
-UPDATE clients
-SET
-    deleted_at = now()
-WHERE deleted_at IS NULL AND id = $1;
+    password_hash
+FROM employees
+WHERE id = $1;

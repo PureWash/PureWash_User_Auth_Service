@@ -56,3 +56,34 @@
 {"time":"2024-10-07T17:33:29.055147075+05:00","level":"INFO","msg":"User login methods"}
 {"time":"2024-10-08T16:03:13.861964946+05:00","level":"INFO","msg":"User login methods"}
 {"time":"2024-10-08T16:33:59.302884204+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:05:26.257177438+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-08T19:05:26.262677231+05:00","level":"ERROR","msg":"telefon raqami +998 bilan boshlanishi kerak"}
+{"time":"2024-10-08T19:05:42.123210583+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-08T19:05:42.123371929+05:00","level":"ERROR","msg":"telefon raqami noto'g'ri uzunlikda"}
+{"time":"2024-10-08T19:05:51.712046158+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-08T19:06:04.233718915+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:06:56.998283107+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:07:37.957928345+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:07:37.95930166+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:07:37.959392196+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:11:40.795872306+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:12:03.134341041+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-08T19:17:41.958176844+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:17:49.392490145+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:17:49.393632076+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:17:49.393692393+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:19:38.086724813+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:19:38.089916382+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:19:38.089973763+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:19:42.074286969+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:21:33.153850304+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:21:40.049453539+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:21:40.050865182+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:21:40.050942524+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:24:15.59044955+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-08T19:24:15.593760253+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:24:15.593852292+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-08T19:24:25.928345868+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:25:46.576630418+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:36:47.183531824+05:00","level":"INFO","msg":"User update method"}
+{"time":"2024-10-08T19:36:53.757804924+05:00","level":"INFO","msg":"User login methods"}
