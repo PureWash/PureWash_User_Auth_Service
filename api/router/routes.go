@@ -13,7 +13,6 @@ import (
 
 type Controller interface {
 	SetupRoutes()     // Asosiy yo'llarni o'rnatish
-	SetupMiddleware() // Middlewarelarni sozlash
 }
 
 type controllerImpl struct {
@@ -36,7 +35,7 @@ func NewController(mainHandler handler.MainHandler, router *gin.Engine) Controll
 // @name Authorization
 // @schemes http
 func (c *controllerImpl) SetupRoutes() {
-
+	c.router.Use(middleware.CorsMiddileware())
 	// Swagger endpointini sozlash
 	c.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -54,8 +53,4 @@ func (c *controllerImpl) SetupRoutes() {
 		user.PUT("/password", c.mainHandler.User().UpdatePassword)
 	}
 
-}
-
-func (c *controllerImpl) SetupMiddleware() {
-	c.router.Use(middleware.CorsMiddileware())
 }

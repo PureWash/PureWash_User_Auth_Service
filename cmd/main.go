@@ -35,7 +35,6 @@ func main() {
 
 	mainHandler := handler.NewMainHandler(service.NewUserService(queries, logger), logger)
 	controller := router.NewController(mainHandler, r)
-	controller.SetupMiddleware()
 	controller.SetupRoutes()
 
 	log.Fatal(r.Run(":8179"))

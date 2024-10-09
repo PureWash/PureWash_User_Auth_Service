@@ -185,10 +185,26 @@ func (us *userServiceImpl) UpdatePassword(ctx context.Context, updatePass models
 		us.logger.Error(fmt.Sprintf("Error in parse uuid: %s", err.Error()))
 		return err
 	}
+
+	hashedPassword, err := us.userRepository.GetUserPassword(ctx, uid)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in check password %s", err.Error()))
+		return err
+	}
+
+	check := security.CheckPasswordHash(updatePass.OldPassword, hashedPassword)
+	if !check {
+		us.logger.Error(fmt.Sprintf("Passwrod is incorrect"))
+		return fmt.Errorf("password is incorrect")
+	}
+	hashedPassword, err = security.HashPassword(updatePass.NewPassword)
+	if err != nil {
+		us.logger.ErrorContext(ctx, fmt.Sprintf("Error in hashed password: %s", err.Error()))
+		return err
+	}
 	err = us.userRepository.UpdatePassword(ctx, storage.UpdatePasswordParams{
 		ID:             uid,
-		PasswordHash:   updatePass.OldPassword,
-		PasswordHash_2: updatePass.NewPassword,
+		PasswordHash:   hashedPassword,
 	})
 
 	if err != nil {

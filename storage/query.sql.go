@@ -158,17 +158,16 @@ UPDATE employees
 SET 
     password_hash = $1,
     updated_at = now()
-WHERE id = $2 AND password_hash = $3 AND deleted_at IS NULL
+WHERE id = $2 AND deleted_at IS NULL
 `
 
 type UpdatePasswordParams struct {
-	PasswordHash   string
-	ID             uuid.UUID
-	PasswordHash_2 string
+	PasswordHash string
+	ID           uuid.UUID
 }
 
 func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
-	_, err := q.db.ExecContext(ctx, updatePassword, arg.PasswordHash, arg.ID, arg.PasswordHash_2)
+	_, err := q.db.ExecContext(ctx, updatePassword, arg.PasswordHash, arg.ID)
 	return err
 }
 

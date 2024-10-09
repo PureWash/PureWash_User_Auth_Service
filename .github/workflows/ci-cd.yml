@@ -19,6 +19,10 @@ jobs:
         with:
           go-version: '1.23.1'
 
+      - name: Run Tests
+        run: |
+          go test ./... 
+
       - name: Deployment
         uses: appleboy/ssh-action@master
         with:
@@ -27,21 +31,32 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ubuntu/CarpetsWash/user-service/
-            git pull origin main
-            sudo docker compose down
-            sudo docker image rm purewash_user_auth_service-user_service
-            sudo docker compose up --build -d
+            # Function to update service
+            update_service() {
+              local service_path=$1
+              local image_name=$2
 
-            cd ../PureWash_Api-Gateway/
-            git pull origin main
-            sudo docker compose down
-            sudo docker image rm purewash_api-gateway-api_service
-            sudo docker compose up --build -d
+              cd $service_path
+              git pull origin main
+              if [ $? -ne 0 ]; then
+                echo "Conflict occurred during git pull in $service_path. Please resolve the conflicts manually."
+                exit 1
+              fi
 
-            cd ../CarpetWash/
-            git pull origin main
-            sudo docker compose down
-            sudo docker image rm carpetwash-carpetwash
-            sudo docker compose up --build -d
+              sudo docker compose down
+              # Check if the image exists before trying to remove it
+              if sudo docker image ls | grep -q "$image_name"; then
+                sudo docker image rm $image_name || true
+              fi
+              sudo docker compose up --build -d
+            }
 
+            # Update each service
+            update_service "ubuntu/CarpetsWash/user-service/" "user-service-user_service"
+            update_service "../PureWash_Api-Gateway/" "purewash_api-gateway-api_service"
+            update_service "../CarpetWash/" "carpetwash-carpetwash"
+            
+      - name: Notify Users
+        if: ${{ success() }}
+        run: |
+          echo "Deployment succeeded!"

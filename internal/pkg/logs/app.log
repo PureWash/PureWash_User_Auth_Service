@@ -87,3 +87,47 @@
 {"time":"2024-10-08T19:25:46.576630418+05:00","level":"INFO","msg":"User update method"}
 {"time":"2024-10-08T19:36:47.183531824+05:00","level":"INFO","msg":"User update method"}
 {"time":"2024-10-08T19:36:53.757804924+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:21:19.096523296+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:21:45.115883371+05:00","level":"INFO","msg":"User profile get method"}
+{"time":"2024-10-09T10:22:07.487443235+05:00","level":"INFO","msg":"Update password method"}
+{"time":"2024-10-09T10:22:15.813063798+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:22:15.814197648+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:22:15.814265445+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:22:25.661883876+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:22:25.66290889+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:22:25.662970785+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:22:40.91270699+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:22:40.913800466+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:22:40.913876599+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:22:42.045563467+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:22:42.046804891+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:22:42.046861856+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:22:42.841690987+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:22:42.842873026+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:22:42.842942612+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:24:20.357110283+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:24:20.358236014+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-09T10:24:20.358293854+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-09T10:24:35.730722974+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:25:15.959855591+05:00","level":"INFO","msg":"Update password method"}
+{"time":"2024-10-09T10:25:24.10477621+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:25:24.106024101+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:25:24.1060807+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:25:40.981825315+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:25:40.982900553+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:25:40.982957975+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:28:30.500235007+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:28:30.509006016+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:28:30.509077393+05:00","level":"ERROR","msg":"Error in server login user: username or password is incorrect"}
+{"time":"2024-10-09T10:30:36.730250125+05:00","level":"INFO","msg":"User register methods"}
+{"time":"2024-10-09T10:30:47.866026691+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:31:18.913219624+05:00","level":"INFO","msg":"Update password method"}
+{"time":"2024-10-09T10:31:18.966969222+05:00","level":"ERROR","msg":"Passwrod is incorrect"}
+{"time":"2024-10-09T10:31:18.967002835+05:00","level":"ERROR","msg":"Error updating password: username or password is incorrect"}
+{"time":"2024-10-09T10:32:00.459740224+05:00","level":"INFO","msg":"Update password method"}
+{"time":"2024-10-09T10:32:09.754073008+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T10:49:59.851864296+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T11:38:58.512838503+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-09T11:38:58.514333942+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
+{"time":"2024-10-09T11:38:58.514367339+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
+{"time":"2024-10-09T11:39:15.386407213+05:00","level":"INFO","msg":"User login methods"}
