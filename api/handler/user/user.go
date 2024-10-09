@@ -141,8 +141,8 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in server login user: %v", err))
 
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
 			Message: "Failed to login",
 			Error:   err.Error(),
 		})
@@ -187,8 +187,8 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error in delete user: %v", err))
 
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
 			Message: "Failed to delete user",
 			Error:   err.Error(),
 		})
@@ -257,8 +257,8 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating user profile: %v", err))
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
 			Message: "Failed to update user profile",
 			Error:   err.Error(),
 		})
@@ -284,8 +284,8 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 	uh.logger.Info("User profile get method")
 	var val, exists = ctx.Get("claims")
 	if !exists {
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(401, models.ErrorResponse{
+			Status:  401,
 			Message: "Authorization header is required",
 		})
 		return
@@ -305,8 +305,8 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 	resp, err := uh.userService.GetUserProfile(ctx, tokenClaims.ID)
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error retrieving user profile: %v", err))
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
 			Message: "Failed to get user profile",
 			Error:   err.Error(),
 		})
@@ -369,8 +369,8 @@ func (uh *userHandlerImpl) UpdatePassword(ctx *gin.Context) {
 	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating password: %v", err))
-		ctx.JSON(500, models.ErrorResponse{
-			Status:  500,
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
 			Message: "Failed to update password",
 			Error:   err.Error(),
 		})
