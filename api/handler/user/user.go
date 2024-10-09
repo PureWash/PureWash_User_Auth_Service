@@ -175,7 +175,7 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 	tokenClaims, err := security.TokenClaimsParse(val)
 	if err != nil {
 		ctx.JSON(500, models.ErrorResponse{
-			Status:  401,
+			Status:  500,
 			Message: "Token is invalid",
 			Error:   err.Error(),
 		})
@@ -227,7 +227,7 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 	tokenClaims, err := security.TokenClaimsParse(val)
 	if err != nil {
 		ctx.JSON(500, models.ErrorResponse{
-			Status:  401,
+			Status:  500,
 			Message: "Token is invalid",
 			Error:   err.Error(),
 		})
@@ -285,7 +285,7 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 	var val, exists = ctx.Get("claims")
 	if !exists {
 		ctx.JSON(500, models.ErrorResponse{
-			Status:  401,
+			Status:  500,
 			Message: "Authorization header is required",
 		})
 		return
@@ -341,7 +341,7 @@ func (uh *userHandlerImpl) UpdatePassword(ctx *gin.Context) {
 	tokenClaims, err := security.TokenClaimsParse(val)
 	if err != nil {
 		ctx.JSON(500, models.ErrorResponse{
-			Status:  401,
+			Status:  500,
 			Message: "Token is invalid",
 			Error:   err.Error(),
 		})
