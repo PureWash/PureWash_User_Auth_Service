@@ -42,6 +42,7 @@ func (c *controllerImpl) SetupRoutes() {
 	// User routerlarini sozlash
 	c.router.POST("/register", c.mainHandler.User().RegisterUserHandler)
 	c.router.POST("/login", c.mainHandler.User().LoginUserHandler)
+	c.router.POST("/refresh-token", c.mainHandler.User().UpdateAccessTokenHandler)
 
 	// user guruhlash
 	user := c.router.Group("/users")

@@ -17,6 +17,7 @@ import (
 type UserHandler interface {
 	RegisterUserHandler(ctx *gin.Context)
 	LoginUserHandler(ctx *gin.Context)
+	UpdateAccessTokenHandler(ctx *gin.Context)
 	GetUserHandler(ctx *gin.Context)
 	DeleteUserHandler(ctx *gin.Context)
 	UpdateUserHandler(ctx *gin.Context)
@@ -158,7 +159,7 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 // @Description This endpoint updated access token
 // @Tags auth
 // @Produce json
-// @Security ApiKeyAuth
+// @Param   refresh-token body models.UpdateAccessToken true "Refresh token"
 // @Success 200 {object} models.UpdateAccessTokenResp
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 401 {object} models.ErrorResponse
