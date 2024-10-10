@@ -15,14 +15,13 @@ CREATE Table services (
     price DECIMAL(10,2)
 );
 
-
 CREATE Table orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
     service_id UUID NOT NULL REFERENCES services(id) ON DELETE CASCADE,
     area float NOT NULL,
     total_price float NOT NULL,
-    status VARCHAR(50) DEFAULT 'inprogress',
+    status VARCHAR(50) DEFAULT 'RECEIVED' CHECK(status IN ('RECEIVED', 'PREPARING', 'READY', 'DELIVERING', 'DELIVERED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at int DEFAULT 1
