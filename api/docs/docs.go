@@ -63,11 +63,6 @@ const docTemplate = `{
         },
         "/refresh-token": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "This endpoint updated access token",
                 "produces": [
                     "application/json"
@@ -76,6 +71,17 @@ const docTemplate = `{
                     "auth"
                 ],
                 "summary": "Refresh token",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "refresh-token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UpdateAccessToken"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -406,6 +412,14 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.UpdateAccessToken": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
                 }
             }
         },
