@@ -37,6 +37,11 @@ definitions:
       status:
         type: integer
     type: object
+  models.UpdateAccessTokenResp:
+    properties:
+      access_token:
+        type: string
+    type: object
   models.UpdatePasswordRequest:
     properties:
       new_password:
@@ -124,6 +129,33 @@ paths:
       summary: User login
       tags:
       - auth
+  /refresh-token:
+    post:
+      description: This endpoint updated access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UpdateAccessTokenResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Refresh token
+      tags:
+      - auth
   /register:
     post:
       consumes:
@@ -168,6 +200,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -200,6 +236,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -221,6 +261,10 @@ paths:
             $ref: '#/definitions/models.UserProfile'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":
@@ -253,6 +297,10 @@ paths:
             $ref: '#/definitions/models.SuccessResponce'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/models.ErrorResponse'
         "500":

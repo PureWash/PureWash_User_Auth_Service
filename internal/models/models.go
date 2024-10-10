@@ -40,6 +40,14 @@ type LoginResponse struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+type UpdateAccessToken struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
+type UpdateAccessTokenResp struct {
+	AccessToken  string `json:"access_token"`
+}
+
 type UserProfile struct {
 	ID          string `json:"id"`
 	Username    string `json:"username"`
@@ -61,11 +69,11 @@ type UpdatePasswordRequest struct {
 }
 
 type UpdateUserParams struct {
-	ID           string `json:"id"`
-	Username     string `json:"username"`
-	FullName     string `json:"full_name"`
-	PhoneNumber  string `json:"phone_number"`
-	Password string `json:"password"`
+	ID          string `json:"id"`
+	Username    string `json:"username"`
+	FullName    string `json:"full_name"`
+	PhoneNumber string `json:"phone_number"`
+	Password    string `json:"password"`
 }
 
 type UpdatePasswordParams struct {

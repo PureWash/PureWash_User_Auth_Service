@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
+	"user-service/internal/config"
 	"user-service/internal/models"
 	"user-service/internal/pkg"
 	"user-service/internal/security"
@@ -152,6 +154,57 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 	ctx.JSON(200, resp)
 }
 
+// @Summary Refresh token
+// @Description This endpoint updated access token
+// @Tags auth
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} models.UpdateAccessTokenResp
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /refresh-token [post]
+func (uh *userHandlerImpl) UpdateAccessTokenHandler(ctx *gin.Context) {
+	var req models.UpdateAccessToken
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Invalid request body",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	secretKey := config.Load().SECRET_KEY
+	tokenClaims, err := security.ExtractClaims(req.RefreshToken, secretKey)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, models.ErrorResponse{
+			Status:  401,
+			Message: "Infalid refresh token",
+			Error:   err.Error(),
+		})
+	}
+
+	accessToken, err := security.GenerateJWTToken(security.TokenClaims{
+		ID:       tokenClaims.ID,
+		Username: tokenClaims.Username,
+		Role:     tokenClaims.Username,
+	}, secretKey, time.Duration(20*time.Minute))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, models.ErrorResponse{
+			Status:  500,
+			Message: "Failed to generate access token",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, models.UpdateAccessTokenResp{
+		AccessToken: accessToken,
+	})
+}
+
 // @Summary Delete a user
 // @Description This endpoint deletes a user by their ID
 // @Tags users
@@ -159,6 +212,7 @@ func (uh *userHandlerImpl) LoginUserHandler(ctx *gin.Context) {
 // @Security     ApiKeyAuth
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/delete [delete]
 func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
@@ -210,6 +264,7 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 // @Param user body models.UpdateUserProfile true "User Profile"
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/update [put]
 func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
@@ -249,11 +304,11 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 
 	// Service layer error
 	err = uh.userService.UpdateUserProfile(ctx, models.UpdateUserParams{
-		ID:           tokenClaims.ID,
-		Username:     user.Username,
-		FullName:     user.FullName,
-		PhoneNumber:  user.PhoneNumber,
-		Password: user.PasswordHash,
+		ID:          tokenClaims.ID,
+		Username:    user.Username,
+		FullName:    user.FullName,
+		PhoneNumber: user.PhoneNumber,
+		Password:    user.PasswordHash,
 	})
 	if err != nil {
 		uh.logger.Error(fmt.Sprintf("Error updating user profile: %v", err))
@@ -278,6 +333,7 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 // @Security     ApiKeyAuth
 // @Success 200 {object} models.UserProfile
 // @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/profile [get]
 func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
@@ -325,6 +381,7 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 // @Param updatePass body models.UpdatePasswordRequest true "Update Password Request"
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/password [put]
 func (uh *userHandlerImpl) UpdatePassword(ctx *gin.Context) {
