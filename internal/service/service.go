@@ -174,7 +174,7 @@ func (us *userServiceImpl) UpdateUserProfileAdmin(ctx context.Context, updateUse
 
 	hashedPassword, err := security.HashPassword(updateUser.Password)
 	if err != nil {
-		us.logger.Error(fmt.Sprintf("Error in check password %s", err.Error()))
+		us.logger.Error(fmt.Sprintf("Error in genereted hash password: %s", err.Error()))
 		return err
 	}
 

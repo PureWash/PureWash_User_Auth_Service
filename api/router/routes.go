@@ -57,8 +57,8 @@ func (c *controllerImpl) SetupRoutes() {
 	auth := c.router.Group("/auth")
 	auth.Use(middleware.IsAuthenticated())
 	{
-		auth.PUT("/update:id", c.mainHandler.User().UpdateUserAdminHandler)
-		auth.DELETE("/delete:id", c.mainHandler.User().DeleteUserAdminHandler)
+		auth.PUT("/update/:id", c.mainHandler.User().UpdateUserAdminHandler)
+		auth.DELETE("/delete/:id", c.mainHandler.User().DeleteUserAdminHandler)
 		auth.GET("/users", c.mainHandler.User().GetAllUsersHandler)
 	}
 

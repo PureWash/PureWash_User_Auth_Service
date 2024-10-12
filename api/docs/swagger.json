@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/auth/delete": {
+        "/auth/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -59,7 +59,7 @@
                 }
             }
         },
-        "/auth/update": {
+        "/auth/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -91,7 +91,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UpdateUserProfile"
+                            "$ref": "#/definitions/models.UpdateUserAdminParams"
                         }
                     }
                 ],
@@ -626,6 +626,26 @@
                     "type": "string"
                 },
                 "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UpdateUserAdminParams": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }

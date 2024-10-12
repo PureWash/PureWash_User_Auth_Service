@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/delete": {
+        "/auth/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -67,7 +67,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/update": {
+        "/auth/update/{id}": {
             "put": {
                 "security": [
                     {
@@ -99,7 +99,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UpdateUserProfile"
+                            "$ref": "#/definitions/models.UpdateUserAdminParams"
                         }
                     }
                 ],
@@ -634,6 +634,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UpdateUserAdminParams": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }

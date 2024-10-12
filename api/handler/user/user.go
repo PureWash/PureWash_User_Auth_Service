@@ -269,10 +269,10 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /auth/delete [delete]
+// @Router /auth/delete/{id} [delete]
 func (uh *userHandlerImpl) DeleteUserAdminHandler(ctx *gin.Context) {
 	uh.logger.Info("User delete methods")
-	id := ctx.Query("id")
+	id := ctx.Param("id")
 	// Service layer error (delete user failed)
 	err := uh.userService.DeleteUser(ctx, id)
 	if err != nil {
@@ -370,12 +370,12 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 // @Produce json
 // @Security     ApiKeyAuth
 // @Param id path string true "user id"
-// @Param user body models.UpdateUserProfile true "User Profile"
+// @Param user body models.UpdateUserAdminParams true "User Profile"
 // @Success 200 {object} models.SuccessResponce
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 401 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /auth/update [put]
+// @Router /auth/update/{id} [put]
 func (uh *userHandlerImpl) UpdateUserAdminHandler(ctx *gin.Context) {
 	uh.logger.Info("User update method")
 	var user models.UpdateUserAdminParams
@@ -390,7 +390,7 @@ func (uh *userHandlerImpl) UpdateUserAdminHandler(ctx *gin.Context) {
 		})
 		return
 	}
-	id := ctx.Query("id")
+	id := ctx.Param("id")
 	// Service layer error
 	err := uh.userService.UpdateUserProfileAdmin(ctx, models.UpdateUserAdmin{
 		ID:          id,

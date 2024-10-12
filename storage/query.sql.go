@@ -199,16 +199,16 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 	return err
 }
 
-const updateUserAdmin = `-- name: UpdateUser :exec
+const updateUserAdmin = `-- name: UpdateAdminUser :exec
 UPDATE employees
 SET 
     username = $1,
     full_name = $2,
-    phone_number = $3
+    phone_number = $3,
 	role = $4,
-	password = $5,
+	password_hash = $5,
     updated_at = now()
-WHERE id = $4 AND deleted_at IS NULL
+WHERE id = $6 AND deleted_at IS NULL
 `
 
 type UpdateUserAdminParams struct {
@@ -221,7 +221,7 @@ type UpdateUserAdminParams struct {
 }
 
 func (q *Queries) UpdateAdminUser(ctx context.Context, arg UpdateUserAdminParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser,
+	_, err := q.db.ExecContext(ctx, updateUserAdmin,
 		arg.Username,
 		arg.FullName,
 		arg.PhoneNumber,
