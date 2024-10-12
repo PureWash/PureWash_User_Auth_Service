@@ -131,3 +131,24 @@
 {"time":"2024-10-09T11:38:58.514333942+05:00","level":"ERROR","msg":"Error in login user: sql: no rows in result set"}
 {"time":"2024-10-09T11:38:58.514367339+05:00","level":"ERROR","msg":"Error in server login user: sql: no rows in result set"}
 {"time":"2024-10-09T11:39:15.386407213+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-12T15:53:50.053773411+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-12T15:54:09.202028985+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:54:09.202420964+05:00","level":"ERROR","msg":"Eror in get all users: sql: expected 5 destination arguments in Scan, not 1"}
+{"time":"2024-10-12T15:54:09.202449023+05:00","level":"ERROR","msg":"Error in get all users: sql: expected 5 destination arguments in Scan, not 1"}
+{"time":"2024-10-12T15:56:49.541614588+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:57:27.502592511+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:57:28.87365565+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:57:29.780015299+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:58:05.452198497+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:58:25.942162391+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T15:58:57.733811965+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:00:28.808299217+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:01:58.934313742+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:02:48.151831045+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:03:07.913234351+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:05:49.434282111+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:07:01.660425205+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:07:59.631471776+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:08:37.287363859+05:00","level":"INFO","msg":"User login methods"}
+{"time":"2024-10-12T16:09:06.835041871+05:00","level":"INFO","msg":"Get All users method called"}
+{"time":"2024-10-12T16:09:33.11131449+05:00","level":"INFO","msg":"Get All users method called"}

@@ -19,8 +19,10 @@ type UserService interface {
 	LoginUser(context.Context, models.LoginRequest) (*models.LoginResponse, error)
 	GetUserProfile(context.Context, string) (*models.UserProfile, error)
 	UpdateUserProfile(context.Context, models.UpdateUserParams) error
+	UpdateUserProfileAdmin(ctx context.Context, updateUser models.UpdateUserAdmin) error
 	DeleteUser(context.Context, string) error
 	UpdatePassword(context.Context, models.UpdatePasswordParams) error
+	GetAllUsers(ctx context.Context, fEmployee models.GetAllUsersReq) (*storage.GetAllUsersRow, error)
 }
 
 type userServiceImpl struct {
@@ -163,6 +165,36 @@ func (us *userServiceImpl) UpdateUserProfile(ctx context.Context, updateUser mod
 	return nil
 }
 
+func (us *userServiceImpl) UpdateUserProfileAdmin(ctx context.Context, updateUser models.UpdateUserAdmin) error {
+	uid, err := uuid.Parse(updateUser.ID)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in parse uuid: %s", err.Error()))
+		return err
+	}
+
+	hashedPassword, err := security.HashPassword(updateUser.Password)
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in check password %s", err.Error()))
+		return err
+	}
+
+	err = us.userRepository.UpdateAdminUser(ctx, storage.UpdateUserAdminParams{
+		ID:          uid,
+		Username:    updateUser.Username,
+		FullName:    updateUser.FullName,
+		PhoneNumber: updateUser.PhoneNumber,
+		Role:        updateUser.Role,
+		Password:    hashedPassword,
+	})
+
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Error in update user: %s", err.Error()))
+		return err
+	}
+
+	return nil
+}
+
 func (us *userServiceImpl) DeleteUser(ctx context.Context, id string) error {
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -203,8 +235,8 @@ func (us *userServiceImpl) UpdatePassword(ctx context.Context, updatePass models
 		return err
 	}
 	err = us.userRepository.UpdatePassword(ctx, storage.UpdatePasswordParams{
-		ID:             uid,
-		PasswordHash:   hashedPassword,
+		ID:           uid,
+		PasswordHash: hashedPassword,
 	})
 
 	if err != nil {
@@ -213,4 +245,21 @@ func (us *userServiceImpl) UpdatePassword(ctx context.Context, updatePass models
 	}
 
 	return nil
+}
+
+func (us *userServiceImpl) GetAllUsers(ctx context.Context, fEmployee models.GetAllUsersReq) (*storage.GetAllUsersRow, error) {
+	resp, err := us.userRepository.GetAllUsers(ctx, storage.GetAllUsersParams{
+		Username:    fEmployee.Username,
+		FullName:    fEmployee.FullName,
+		PhoneNumber: fEmployee.PhoneNumber,
+		Role:        fEmployee.Role,
+		Limit:       fEmployee.Limit,
+		Offset:      (fEmployee.Page - 1) * fEmployee.Limit,
+	})
+	if err != nil {
+		us.logger.Error(fmt.Sprintf("Eror in get all users: %s", err.Error()))
+		return nil, err
+	}
+
+	return resp, nil
 }

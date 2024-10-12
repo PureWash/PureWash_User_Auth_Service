@@ -22,6 +22,9 @@ type UserHandler interface {
 	DeleteUserHandler(ctx *gin.Context)
 	UpdateUserHandler(ctx *gin.Context)
 	UpdatePassword(ctx *gin.Context)
+	GetAllUsersHandler(ctx *gin.Context)
+	DeleteUserAdminHandler(ctx *gin.Context)
+	UpdateUserAdminHandler(ctx *gin.Context)
 }
 
 type userHandlerImpl struct {
@@ -256,6 +259,39 @@ func (uh *userHandlerImpl) DeleteUserHandler(ctx *gin.Context) {
 	})
 }
 
+// @Summary Delete a user for Admin
+// @Description This endpoint deletes a user by their ID
+// @Tags admin
+// @Produce json
+// @Security     ApiKeyAuth
+// @Param id path string true "user id"
+// @Success 200 {object} models.SuccessResponce
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /auth/delete [delete]
+func (uh *userHandlerImpl) DeleteUserAdminHandler(ctx *gin.Context) {
+	uh.logger.Info("User delete methods")
+	id := ctx.Query("id")
+	// Service layer error (delete user failed)
+	err := uh.userService.DeleteUser(ctx, id)
+	if err != nil {
+		uh.logger.Error(fmt.Sprintf("Error in delete user: %v", err))
+
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Failed to delete user",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, models.SuccessResponce{
+		Status:  200,
+		Message: "User deleted successfully",
+	})
+}
+
 // @Summary Update user profile
 // @Description This endpoint updates user profile details
 // @Tags users
@@ -327,6 +363,59 @@ func (uh *userHandlerImpl) UpdateUserHandler(ctx *gin.Context) {
 	})
 }
 
+// @Summary Update user profile for admin
+// @Description This endpoint updates user profile details for admin
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Security     ApiKeyAuth
+// @Param id path string true "user id"
+// @Param user body models.UpdateUserProfile true "User Profile"
+// @Success 200 {object} models.SuccessResponce
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 401 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /auth/update [put]
+func (uh *userHandlerImpl) UpdateUserAdminHandler(ctx *gin.Context) {
+	uh.logger.Info("User update method")
+	var user models.UpdateUserAdminParams
+
+	// JSON binding error
+	if err := ctx.BindJSON(&user); err != nil {
+		uh.logger.Error(fmt.Sprintf("Error binding JSON: %v", err))
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Invalid user input",
+			Error:   err.Error(),
+		})
+		return
+	}
+	id := ctx.Query("id")
+	// Service layer error
+	err := uh.userService.UpdateUserProfileAdmin(ctx, models.UpdateUserAdmin{
+		ID:          id,
+		Username:    user.Username,
+		FullName:    user.FullName,
+		PhoneNumber: user.PhoneNumber,
+		Password:    user.Password,
+		Role:        user.Role,
+	})
+	if err != nil {
+		uh.logger.Error(fmt.Sprintf("Error updating user profile: %v", err))
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Failed to update user profile",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, models.SuccessResponce{
+		Status:  200,
+		Message: "User profile updated successfully",
+	})
+}
+
 // @Summary Get user profile
 // @Description This endpoint retrieves the user profile by their ID
 // @Tags users
@@ -365,6 +454,49 @@ func (uh *userHandlerImpl) GetUserHandler(ctx *gin.Context) {
 		ctx.JSON(400, models.ErrorResponse{
 			Status:  400,
 			Message: "Failed to get user profile",
+			Error:   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, resp)
+}
+
+// @Summary Get All Users
+// @Description This endpoint get all users
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Security     ApiKeyAuth
+// @Param username query string false "Username filter"
+// @Param full_name query string false "FullName filter"
+// @Param phone_number query string false "PhoneNumber filter"
+// @Param role query string false "Role filter"
+// @Param limit query string false "Limit" default(10)
+// @Param page query string false "page" default(1)
+// @Success 200 {object} storage.GetAllUsersRow
+// @Failure 400	{object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /auth/users [get]
+func (uh *userHandlerImpl) GetAllUsersHandler(ctx *gin.Context) {
+	uh.logger.Info("Get All users method called")
+
+	var filter models.GetAllUsersReq
+	if err := ctx.ShouldBindQuery(&filter); err != nil {
+		uh.logger.Error(fmt.Sprintf("Error binding JSON: %v", err))
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Invalid input",
+			Error:   err.Error(),
+		})
+		return
+	}
+	resp, err := uh.userService.GetAllUsers(ctx, filter)
+	if err != nil {
+		uh.logger.Error(fmt.Sprintf("Error in get all users: %v", err))
+		ctx.JSON(400, models.ErrorResponse{
+			Status:  400,
+			Message: "Failed to get all users",
 			Error:   err.Error(),
 		})
 		return

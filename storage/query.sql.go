@@ -7,6 +7,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -196,4 +197,143 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 		arg.ID,
 	)
 	return err
+}
+
+const updateUserAdmin = `-- name: UpdateUser :exec
+UPDATE employees
+SET 
+    username = $1,
+    full_name = $2,
+    phone_number = $3
+	role = $4,
+	password = $5,
+    updated_at = now()
+WHERE id = $4 AND deleted_at IS NULL
+`
+
+type UpdateUserAdminParams struct {
+	Username    string
+	FullName    string
+	PhoneNumber string
+	Role 		string
+	Password 	string
+	ID          uuid.UUID
+}
+
+func (q *Queries) UpdateAdminUser(ctx context.Context, arg UpdateUserAdminParams) error {
+	_, err := q.db.ExecContext(ctx, updateUser,
+		arg.Username,
+		arg.FullName,
+		arg.PhoneNumber,
+		arg.Role,
+		arg.Password,
+		arg.ID,
+	)
+	return err
+}
+
+var getAllUsers = ` -- name: GetAllUsers :one
+SELECT
+	id,
+	username,
+	full_name,
+	phone_number,
+	role
+FROM employees
+WHERE deleted_at IS NULL
+`
+var getAllUsersCount = ` -- name: GetAllUsers :one
+SELECT
+	COUNT(*)
+FROM employees
+WHERE deleted_at IS NULL
+`
+
+type GetAllUsersParams struct {
+	Username 	string 
+	FullName 	string
+	PhoneNumber string
+	Role 		string
+	Limit 		int
+	Offset 		int
+}
+
+type Employees struct {
+	ID          string `json:"id"`
+	Username    string `json:"username"`
+	FullName    string `json:"full_name"`
+	PhoneNumber string `json:"phone_number"`
+	Role        string `json:"role"`
+}
+type GetAllUsersRow struct {
+	Employees  []Employees `json:"employee"`
+	Limit      int         `json:"limit"`
+	Offset     int         `json:"offset"`
+	TotalCount int         `json:"total_count"`
+}
+
+func (q *Queries) GetAllUsers(ctx context.Context, arg GetAllUsersParams) (*GetAllUsersRow, error) {
+	var (
+		filter string
+		args  []interface{}
+	)
+
+	if arg.FullName != "" {
+		filter += fmt.Sprintf(" AND full_name ILIKE $%d", len(args)+1)
+		args = append(args, fmt.Sprintf("%%%s%%", arg.FullName))
+	}
+	if arg.Username != "" {
+		filter += fmt.Sprintf(" AND username ILIKE $%d", len(args)+1)
+		args = append(args, fmt.Sprintf("%%%s%%", arg.Username))
+	}
+	if arg.PhoneNumber != "" {
+		filter += fmt.Sprintf(" AND phone_number ILIKE $%d", len(args)+1)
+		args = append(args, fmt.Sprintf("%%%s%%", arg.PhoneNumber))
+	}
+	if arg.Role != "" {
+		filter += fmt.Sprintf(" AND role ILIKE $%d", len(args)+1)
+		args = append(args, fmt.Sprintf("%%%s%%", arg.Role))
+	}
+
+	row := q.db.QueryRowContext(ctx, getAllUsersCount+filter, args...)
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return nil, err
+	}
+
+	filter += fmt.Sprintf(" OFFSET %d LIMIT %d", arg.Offset, arg.Limit)
+
+	rows, err := q.db.QueryContext(ctx, getAllUsers+filter, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	var employees []Employees
+	for rows.Next() {
+		var i Employees
+		
+		err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.FullName,
+			&i.PhoneNumber,
+			&i.Role,
+		)
+		if err != nil {
+			return nil, err
+		}
+		employees = append(employees, i)
+	}
+
+	if err = row.Err(); err != nil {
+		return nil, err
+	}
+
+	return &GetAllUsersRow{
+		Employees: employees,
+		Limit: arg.Limit,
+		Offset: arg.Offset+1,
+		TotalCount: count,
+	}, nil
 }

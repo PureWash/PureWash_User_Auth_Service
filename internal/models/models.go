@@ -45,7 +45,7 @@ type UpdateAccessToken struct {
 }
 
 type UpdateAccessTokenResp struct {
-	AccessToken  string `json:"access_token"`
+	AccessToken string `json:"access_token"`
 }
 
 type UserProfile struct {
@@ -80,4 +80,30 @@ type UpdatePasswordParams struct {
 	ID          string `json:"id"`
 	OldPassword string `json:"old_password"`
 	NewPassword string `json:"new_password"`
+}
+
+type GetAllUsersReq struct {
+	Username    string `form:"username"`      // "query" yoki "form" tagini ishlating
+    FullName    string `form:"full_name"`
+    PhoneNumber string `form:"phone_number"`
+    Role        string `form:"role"`
+    Limit       int    `form:"limit"`
+    Page        int    `form:"page"`
+}
+
+type UpdateUserAdmin struct {
+	ID          string `json:"id"`
+	Username    string `json:"username"`
+	FullName    string `json:"full_name"`
+	PhoneNumber string `json:"phone_number"`
+	Password    string `json:"password"`
+	Role        string `json:"role"`
+}
+
+type UpdateUserAdminParams struct {
+	Username    string `json:"username"`
+	FullName    string `json:"full_name"`
+	PhoneNumber string `json:"phone_number"`
+	Password    string `json:"password"`
+	Role        string `json:"role"`
 }

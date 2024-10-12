@@ -12,7 +12,7 @@ import (
 )
 
 type Controller interface {
-	SetupRoutes()     // Asosiy yo'llarni o'rnatish
+	SetupRoutes() // Asosiy yo'llarni o'rnatish
 }
 
 type controllerImpl struct {
@@ -52,6 +52,14 @@ func (c *controllerImpl) SetupRoutes() {
 		user.PUT("/update", c.mainHandler.User().UpdateUserHandler)
 		user.DELETE("/delete", c.mainHandler.User().DeleteUserHandler)
 		user.PUT("/password", c.mainHandler.User().UpdatePassword)
+	}
+
+	auth := c.router.Group("/auth")
+	auth.Use(middleware.IsAuthenticated())
+	{
+		auth.PUT("/update:id", c.mainHandler.User().UpdateUserAdminHandler)
+		auth.DELETE("/delete:id", c.mainHandler.User().DeleteUserAdminHandler)
+		auth.GET("/users", c.mainHandler.User().GetAllUsersHandler)
 	}
 
 }

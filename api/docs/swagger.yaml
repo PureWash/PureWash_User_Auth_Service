@@ -98,12 +98,164 @@ definitions:
       message:
         type: string
     type: object
+  storage.Employees:
+    properties:
+      full_name:
+        type: string
+      id:
+        type: string
+      phone_number:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  storage.GetAllUsersRow:
+    properties:
+      employee:
+        items:
+          $ref: '#/definitions/storage.Employees'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total_count:
+        type: integer
+    type: object
 info:
   contact: {}
   description: This is a user service.
   title: API Gateway
   version: "1.0"
 paths:
+  /auth/delete:
+    delete:
+      description: This endpoint deletes a user by their ID
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a user for Admin
+      tags:
+      - admin
+  /auth/update:
+    put:
+      consumes:
+      - application/json
+      description: This endpoint updates user profile details for admin
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Profile
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUserProfile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile for admin
+      tags:
+      - admin
+  /auth/users:
+    get:
+      consumes:
+      - application/json
+      description: This endpoint get all users
+      parameters:
+      - description: Username filter
+        in: query
+        name: username
+        type: string
+      - description: FullName filter
+        in: query
+        name: full_name
+        type: string
+      - description: PhoneNumber filter
+        in: query
+        name: phone_number
+        type: string
+      - description: Role filter
+        in: query
+        name: role
+        type: string
+      - default: "10"
+        description: Limit
+        in: query
+        name: limit
+        type: string
+      - default: "1"
+        description: page
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storage.GetAllUsersRow'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Users
+      tags:
+      - admin
   /login:
     post:
       consumes:
